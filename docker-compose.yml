@@ -1,0 +1,15 @@
+version: '3.2'
+
+services:
+  bdd:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_DB: bdd
+    ports:
+      - 5432:5432
+    volumes: 
+      - ./bdd/data:/var/lib/posgresql/data
+ 
