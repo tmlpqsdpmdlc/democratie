@@ -1,15 +1,37 @@
-version: '3.2'
-
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: "3.1"
 services:
-  bdd:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: admin
-      POSTGRES_DB: bdd
-    ports:
-      - 5432:5432
-    volumes: 
-      - ./bdd/data:/var/lib/posgresql/data
- 
+
+    database-wall:
+      image: postgres
+      container_name: database-wall
+      restart: always
+      environment:
+        POSTGRES_PASSWORD: password
+        POSTGRES_USER: admin
+        POSTGRES_DB: database-wall
+      ports:
+        - 5432:5432
+      volumes: 
+        - ./wall/database-wall/data:/application
+
+    webserver:
+      image: nginx:alpine
+      container_name: webserver 
+      working_dir: /application
+      volumes:
+          - .:/application
+          - ./phpdocker/wall/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8000:80"
+
+    backend-wall:
+      build: phpdocker/wall/backend-wall
+      container_name: backend-wall
+      working_dir: /application
+      volumes:
+        - ./wall/backend-wall:/application
+        - ./phpdocker/wall/backend-wall/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+
